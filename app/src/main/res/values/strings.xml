@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ProgettoAppNotes</string>
+    <string name="my_notes">My Notes</string>
+    <string name="search_notes">Search notes</string>
+    <string name="aideas">Aideas</string>
+    <string name="type_note_here">Type Note Here...</string>
+</resources>
