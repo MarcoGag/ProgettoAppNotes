@@ -50,7 +50,7 @@
                 app:layout_constraintTop_toTopOf="@id/imageBack" />
 
             <EditText
-                android:id="@+id/inputNodeTitle"
+                android:id="@+id/inputNoteTitle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginStart="@dimen/_12sdp"
@@ -76,9 +76,9 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/colorIcons"
                 android:textSize="@dimen/_10ssp"
-                app:layout_constraintEnd_toEndOf="@id/inputNodeTitle"
-                app:layout_constraintStart_toStartOf="@+id/inputNodeTitle"
-                app:layout_constraintTop_toBottomOf="@+id/inputNodeTitle"
+                app:layout_constraintEnd_toEndOf="@id/inputNoteTitle"
+                app:layout_constraintStart_toStartOf="@+id/inputNoteTitle"
+                app:layout_constraintTop_toBottomOf="@+id/inputNoteTitle"
                 />
 
             <EditText

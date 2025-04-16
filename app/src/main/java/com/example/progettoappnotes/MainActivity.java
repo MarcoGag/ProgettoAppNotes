@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        ImageView imageAddNoteMain = findViewById(R.id.imageAddImage);
+        ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
         imageAddNoteMain.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
             addNoteActivityLauncher.launch(intent);
