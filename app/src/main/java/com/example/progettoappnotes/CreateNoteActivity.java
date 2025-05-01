@@ -76,23 +76,21 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setNoteText(inputNoteText.getText().toString());
         note.setDateTime(textDateTime.getText().toString());
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
+        class SaveNoteTask extends AsyncTask<Void,Void,Void>{
             @Override
-            public void run() {
-                // Inserisce la nota nel database in background
+            protected Void doInBackground(Void... voids) {
                 NotesDataBase.getDataBase(getApplicationContext()).noteDao().insertNote(note);
-
-                // Torna al thread principale per chiudere l'attività
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent();
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                });
+                return null;
             }
-        });
+            @Override
+            protected void onPostExecute(Void aVoid){
+                super.onPostExecute(aVoid);
+                Intent intent = new Intent();
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        }
+
+        new SaveNoteTask().execute();
     }
 }
