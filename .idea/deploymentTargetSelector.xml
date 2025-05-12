@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="CreateNoteActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-04-14T09:17:32.454305900Z">
+        <DropdownSelection timestamp="2025-05-12T09:34:20.968634900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=278a2569921c7ece" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\zmarc\.android\avd\Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>

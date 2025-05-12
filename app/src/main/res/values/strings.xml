@@ -4,4 +4,7 @@
     <string name="search_notes">Search notes</string>
     <string name="aideas">Aideas</string>
     <string name="type_note_here">Type Note Here...</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="pick_color">pick color</string>
+    <string name="add_image">add image</string>
 </resources>
