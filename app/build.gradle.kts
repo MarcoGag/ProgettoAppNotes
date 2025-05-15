@@ -57,4 +57,11 @@ dependencies {
 
     //Rounded ImageView
     implementation("com.makeramen:roundedimageview:2.3.0")
+
+    //httpRequest
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //JSON
+    implementation ("com.google.code.gson:gson:2.10.1")
+
 }
