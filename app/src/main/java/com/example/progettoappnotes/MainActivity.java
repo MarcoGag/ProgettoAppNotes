@@ -1,27 +1,21 @@
 package com.example.progettoappnotes;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import kotlin.collections.ArrayDeque;
 
 public class MainActivity extends AppCompatActivity {
     public static int REQUEST_CODE_ADD_NOTE = 1;
@@ -35,36 +29,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         btnLogin = findViewById(R.id.buttonLogin);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
+        btnLogin.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
+
         ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
-        imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(),CreateNoteActivity.class),
-                        REQUEST_CODE_ADD_NOTE
-                );
-            }
+        imageAddNoteMain.setOnClickListener(view -> {
+            startActivityForResult(
+                    new Intent(getApplicationContext(), CreateNoteActivity.class),
+                    REQUEST_CODE_ADD_NOTE
+            );
         });
 
         notesRecyclerView = findViewById(R.id.notesRecyclerView);
         notesRecyclerView.setLayoutManager(
-                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         );
+
         noteList = new ArrayList<>();
         notesAdapter = new NotesAdapter(noteList);
         notesRecyclerView.setAdapter(notesAdapter);
+
+        // Gestione long click per eliminare note
+        notesAdapter.setOnNoteLongClickListener((note, position) -> {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Elimina nota")
+                    .setMessage("Vuoi davvero eliminare questa nota?")
+                    .setPositiveButton("Elimina", (dialog, which) -> {
+                        deleteNote(note, position);
+                    })
+                    .setNegativeButton("Annulla", null)
+                    .show();
+        });
+
         getNotes();
     }
-    private void getNotes(){
-        class CreateNoteTask extends AsyncTask<Void,Void,List<Note>>{
+
+    private void getNotes() {
+        class GetNotesTask extends AsyncTask<Void, Void, List<Note>> {
             @Override
             protected List<Note> doInBackground(Void... voids) {
                 return NotesDataBase.getDataBase(getApplicationContext()).noteDao().getAllNotes();
@@ -73,22 +78,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
-                if (noteList.size() == 0){
-                    noteList.addAll(notes);
-                    notesAdapter.notifyDataSetChanged();
-                }else{
-                    noteList.add(0,notes.get(0));
-                    notesAdapter.notifyItemChanged(0);
-                }
-                notesRecyclerView.smoothScrollToPosition(0);
+                noteList.clear();
+                noteList.addAll(notes);
+                notesAdapter.notifyDataSetChanged();
             }
         }
-        new CreateNoteTask().execute();
+        new GetNotesTask().execute();
     }
+
+    private void deleteNote(Note note, int position) {
+        class DeleteNoteTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                NotesDataBase.getDataBase(getApplicationContext()).noteDao().deleteNote(note);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void unused) {
+                super.onPostExecute(unused);
+                noteList.remove(position);
+                notesAdapter.notifyItemRemoved(position);
+                Toast.makeText(MainActivity.this, "Nota eliminata", Toast.LENGTH_SHORT).show();
+            }
+        }
+        new DeleteNoteTask().execute();
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode,requestCode,data);
-        if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK) {
             getNotes();
         }
     }

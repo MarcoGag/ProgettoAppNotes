@@ -13,8 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>{
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
+
     private List<Note> notes;
+
+    // Listener per click prolungato
+    public interface OnNoteLongClickListener {
+        void onNoteLongClick(Note note, int position);
+    }
+
+    private OnNoteLongClickListener longClickListener;
+
+    public void setOnNoteLongClickListener(OnNoteLongClickListener listener) {
+        this.longClickListener = listener;
+    }
 
     public NotesAdapter(List<Note> notes) {
         this.notes = notes;
@@ -35,6 +47,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         holder.setNote(notes.get(position));
+
+        // Gestione del long click
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onNoteLongClick(notes.get(position), position);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -50,6 +71,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     static class NoteViewHolder extends RecyclerView.ViewHolder {
         TextView textTitle, textSubtitle, textdateTime;
         LinearLayout layoutNote;
+
         NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
@@ -58,19 +80,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             layoutNote = itemView.findViewById(R.id.layoutNote);
         }
 
-        void setNote(Note note){
+        void setNote(Note note) {
             textTitle.setText(note.getTitle());
-            if (note.getSubtitle().trim().isEmpty()){
+            if (note.getSubtitle().trim().isEmpty()) {
                 textSubtitle.setVisibility(View.GONE);
-            }else{
+            } else {
                 textSubtitle.setText(note.getSubtitle());
             }
             textdateTime.setText(note.getDateTime());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
-            if (note.getColor()!=null){
+            if (note.getColor() != null) {
                 gradientDrawable.setColor(Color.parseColor(note.getColor()));
-            }else{
+            } else {
                 gradientDrawable.setColor(Color.parseColor("#333333"));
             }
         }

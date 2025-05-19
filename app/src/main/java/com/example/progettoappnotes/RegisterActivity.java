@@ -18,7 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
-    private final String REGISTER_URL = "http://10.0.2.2/notes/register"; // <-- cambia con il tuo endpoint reale
+    private final String REGISTER_URL = "http://10.0.2.2/notes/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
