@@ -1,9 +1,9 @@
 package com.example.progettoappnotes;
 
 public class User {
-    String username;
-    String email;
-    String password;
+    private String username;
+    private String email;
+    private String password;
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -11,5 +11,5 @@ public class User {
         this.password = password;
     }
 
-    public User() {}
+    // (Getter e Setter opzionali)
 }

@@ -12,7 +12,16 @@
         android:text="Create an Account"
         android:textSize="24sp"
         android:layout_gravity="center"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp" />
+
+    <!-- Nuovo campo per Username -->
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -20,7 +29,7 @@
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -28,7 +37,7 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextConfirmPassword"
@@ -36,7 +45,7 @@
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp" />
 
     <Button
         android:id="@+id/buttonRegister"
@@ -52,6 +61,6 @@
         android:text="Already have an account? Login"
         android:textColor="@android:color/holo_blue_dark"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

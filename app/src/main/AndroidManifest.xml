@@ -39,6 +39,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
+        <activity android:name=".RegisterActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

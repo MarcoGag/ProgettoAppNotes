@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.telecom.Call;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText editTextEmail, editTextPassword, editTextUsername;
     Button buttonLogin;
     TextView textViewSignUp;
+    TextView textViewLoggedInUser;
+    Button buttonLogout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         textViewSignUp = findViewById(R.id.textViewSignUp);
+        textViewLoggedInUser = findViewById(R.id.textViewLoggedInUser);
+        buttonLogout = findViewById(R.id.buttonLogout);
 
         // Gestisce il click sul pulsante Login
         buttonLogin.setOnClickListener(view -> {
@@ -69,9 +75,28 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful()) {
+                        String responseBody = response.body().string();
                         Log.d("success", "Login data sent successfully");
+
+                        runOnUiThread(() -> {
+                            if (responseBody.contains("Login successful")){
+                                // login riuscito
+                                editTextEmail.setVisibility(View.GONE);
+                                editTextPassword.setVisibility(View.GONE);
+                                buttonLogin.setVisibility(View.GONE);
+                                textViewSignUp.setVisibility(View.GONE);
+
+                                textViewLoggedInUser.setText("Benvenuto, " + editTextEmail.getText().toString());
+                                textViewLoggedInUser.setVisibility(View.VISIBLE);
+                                buttonLogout.setVisibility(View.VISIBLE);
+                            } else {
+                                // login fallito
+                                Toast.makeText(LoginActivity.this, "Email o password errati", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     } else {
-                        Log.d("error", "Server error: " + response.code()); //restituisce sempre errore perche usiamo http invece che https
+                        Log.d("error", "Server error: " + response.code());
                     }
                     response.close();
                 }
