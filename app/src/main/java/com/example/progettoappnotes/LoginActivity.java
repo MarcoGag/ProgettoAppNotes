@@ -3,17 +3,22 @@ package com.example.progettoappnotes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -38,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editTextEmail = findViewById(R.id.editTextEmail); // campo può contenere email o username
+        editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         textViewSignUp = findViewById(R.id.textViewSignUp);
@@ -61,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Controlla se è un'email o uno username
             User user;
             if (Patterns.EMAIL_ADDRESS.matcher(loginInput).matches()) {
                 user = new User(loginInput, passwordInput); // email
@@ -70,7 +74,8 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             MediaType JSON = MediaType.get("application/json");
-            String url = "http://10.0.2.2/notes/login"; // Assicurati che sia corretto
+            String url = "http://10.0.2.2/notes/login.php";  // Adatta al tuo backend
+
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
             String json = gson.toJson(user);
@@ -85,26 +90,51 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     String responseBody = response.body().string();
-                    runOnUiThread(() -> {
-                        if (response.isSuccessful() && responseBody.contains("Login successful")) {
-                            editTextEmail.setVisibility(View.GONE);
-                            editTextPassword.setVisibility(View.GONE);
-                            buttonLogin.setVisibility(View.GONE);
-                            textViewSignUp.setVisibility(View.GONE);
+                    Log.d("LOGIN_RESPONSE", responseBody);
 
-                            textViewLoggedInUser.setText("Benvenuto, " + loginInput);
-                            textViewLoggedInUser.setVisibility(View.VISIBLE);
-                            buttonLogout.setVisibility(View.VISIBLE);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Credenziali errate", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> {
+                        try {
+                            JSONObject obj = new JSONObject(responseBody);
+                            String status = obj.optString("status", "error");
+                            String message = obj.optString("message", "Errore sconosciuto");
+
+                            if (response.isSuccessful() && status.equals("success")) {
+                                try {
+                                    JSONObject userJson = obj.getJSONObject("user");
+
+                                    SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("userId", userJson.getString("id"));
+                                    editor.putString("userEmail", userJson.getString("email"));
+                                    editor.putBoolean("isLoggedIn", true);
+                                    editor.apply();
+
+                                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } catch (JSONException e) {
+                                    Toast.makeText(LoginActivity.this, "Errore parsing utente", Toast.LENGTH_SHORT).show();
+                                    Log.e("LOGIN_PARSING", e.toString());
+                                }
+                            } else {
+                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.e("LOGIN_ERROR", "Errore parsing JSON: " + e.getMessage());
+                            Toast.makeText(LoginActivity.this, "Errore nella risposta del server", Toast.LENGTH_SHORT).show();
                         }
                     });
+
                     response.close();
                 }
 
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Errore di rete: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    Log.e("LOGIN_NETWORK", "Errore di rete: " + e.getMessage());
+                    runOnUiThread(() ->
+                            Toast.makeText(LoginActivity.this, "Errore di rete: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                    );
                 }
             });
         });
