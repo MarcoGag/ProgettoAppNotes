@@ -20,8 +20,54 @@
         android:background="?android:attr/selectableItemBackground"
         android:textColor="@color/colorWhite"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Pulsante Logout in alto a destra (inizialmente invisibile) -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Testo di benvenuto in alto a sinistra (inizialmente invisibile) -->
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Benvenuto"
+        android:textSize="16sp"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Avatar (se serve) -->
+    <TextView
+        android:id="@+id/textAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/circle_background"
+        android:gravity="center"
+        android:text="A"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- Titolo MyNotes -->
     <TextView
         android:id="@+id/textMyNotes"
         android:layout_width="match_parent"
@@ -30,11 +76,13 @@
         android:fontFamily="@font/ubuntu_bold"
         android:includeFontPadding="false"
         android:text="@string/aideas"
+        android:padding="10dp"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_20ssp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonLogin"
         tools:layout_editor_absoluteX="16dp" />
 
+    <!-- Barra di ricerca -->
     <LinearLayout
         android:id="@+id/LayoutSearch"
         android:layout_width="match_parent"
@@ -53,7 +101,7 @@
             android:layout_height="@dimen/_20sdp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_search"
-            app:tint="@color/colorSerchIcon"/>
+            app:tint="@color/colorSerchIcon" />
 
         <EditText
             android:id="@+id/inputSearch"
@@ -71,6 +119,7 @@
             android:textSize="@dimen/_13sdp" />
     </LinearLayout>
 
+    <!-- Lista Note -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notesRecyclerView"
         android:layout_width="match_parent"
@@ -82,8 +131,9 @@
         android:paddingEnd="@dimen/_12sdp"
         android:paddingBottom="@dimen/_12sdp"
         app:layout_constraintBottom_toTopOf="@id/LayoutQuickActions"
-        app:layout_constraintTop_toBottomOf="@id/LayoutSearch"/>
+        app:layout_constraintTop_toBottomOf="@id/LayoutSearch" />
 
+    <!-- Barra inferiore delle azioni rapide -->
     <LinearLayout
         android:id="@+id/LayoutQuickActions"
         android:layout_width="match_parent"
@@ -100,7 +150,7 @@
             android:layout_height="@dimen/_23sdp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_add_outline"
-            app:tint="@color/colorIcons"/>
+            app:tint="@color/colorIcons" />
 
         <ImageView
             android:id="@+id/imageAddImage"
@@ -109,7 +159,7 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_image"
-            app:tint="@color/colorIcons"/>
+            app:tint="@color/colorIcons" />
 
         <ImageView
             android:id="@+id/imageAddWebLink"
@@ -118,10 +168,10 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_web_link"
-            app:tint="@color/colorIcons"/>
-
+            app:tint="@color/colorIcons" />
     </LinearLayout>
 
+    <!-- Pulsante circolare per aggiungere nota -->
     <ImageView
         android:id="@+id/imageAddNoteMain"
         android:layout_width="@dimen/_40sdp"
@@ -134,6 +184,6 @@
         app:tint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@id/LayoutQuickActions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/LayoutQuickActions"/>
+        app:layout_constraintTop_toTopOf="@id/LayoutQuickActions" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
